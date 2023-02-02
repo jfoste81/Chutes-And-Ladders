@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <ostream>
 
 using namespace std;
 
@@ -58,9 +59,16 @@ int main(){
     //Start of the actual game
     while(run){
         for(int i = 0; i < users.size(); i++){
+            string choice = "";
+            cout << "\nPlayer " << i+1 << " are you ready? Press any button to continue:" << endl;
+            cin >> choice; 
             spinAmount = spin(); 
-            cout << "\nPlayer " << i+1 << " spun a " << spinAmount << "!" << endl;
-            sleep(2);
+            cout << "\nPlayer " << i+1 << " spun a " << endl;
+            int amount = (rand() % 10) + 5;
+            for(int j = 0; j < amount; i++){
+                cout << "\r" << (rand() % 6) + 1 << flush;
+            }
+            cout << spinAmount << "!" << endl;
             move(board, spinAmount, coords, users, i);
             displayBoard(board);
             sleep(3);
