@@ -16,6 +16,7 @@ bool checkForLadders(string board[5][8], vector<int>& coords, int count);
 bool checkForChutes(string board[5][8], vector<int>& coords, int count);
 bool checkForWinner(string board[5][8]);
 
+//Main
 int main(){
     srand(time(NULL)); //seeding rand()
     
@@ -60,11 +61,12 @@ int main(){
     while(run){
         for(int i = 0; i < users.size(); i++){
             string choice = "";
-            cout << "\nPlayer " << i+1 << " are you ready? Press any button to continue:" << endl;
+            cout << "\nPlayer " << i+1 << " are you ready? Press any button to continue:" << endl; //User input
             cin >> choice; 
             spinAmount = spin(); 
             cout << "\nPlayer " << i+1 << " spun a " << endl;
-            for(int j = 0; j < (rand() % 2000) + 1000; j++){
+            //for loop that simulates dice rolling
+            for(int j = 0; j < (rand() % 2000) + 1000; j++){ 
                 cout << "\r" << (rand() % 6) + 1 << flush;
             }
             cout << "\r" << spinAmount << "!" << endl;
