@@ -1,6 +1,3 @@
-//TEST2
-
-
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
