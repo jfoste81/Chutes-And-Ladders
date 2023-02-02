@@ -64,11 +64,11 @@ int main(){
             cin >> choice; 
             spinAmount = spin(); 
             cout << "\nPlayer " << i+1 << " spun a " << endl;
-            int amount = (rand() % 10) + 5;
-            for(int j = 0; j < amount; i++){
+            for(int j = 0; j < (rand() % 2000) + 1000; j++){
                 cout << "\r" << (rand() % 6) + 1 << flush;
             }
-            cout << spinAmount << "!" << endl;
+            cout << "\r" << spinAmount << "!" << endl;
+            sleep(2);
             move(board, spinAmount, coords, users, i);
             displayBoard(board);
             sleep(3);
@@ -124,7 +124,7 @@ void move(string board[5][8], int spinAmount, vector<int>& coords, vector<string
             }
         }
     }
-    board[coords.at(count * 2)][coords.at(count * 2 + 1)] += users.at(count);
+    board[coords.at(count * 2)][coords.at(count * 2 + 1)] = users.at(count);
     board[y][x] = board[y][x].erase(board[y][x].find(users.at(count)),1);
 
 }
