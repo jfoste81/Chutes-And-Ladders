@@ -126,7 +126,7 @@ void move(string board[5][8], int spinAmount, vector<int>& coords, vector<string
             }
         }
     }
-    board[coords.at(count * 2)][coords.at(count * 2 + 1)] += users.at(count);
+    board[coords.at(count * 2)][coords.at(count * 2 + 1)] += users.at(count); //if-else chain to check see if space is empty
     board[y][x] = board[y][x].erase(board[y][x].find(users.at(count)),1);
 }
 
@@ -135,7 +135,7 @@ void displayBoard(string board[5][8]){
     //puts a space inside of empty indices
     for(int i = 0; i < 5; i++){
         for(int j = 0; j < 8; j++){
-            if(board[i][j] != "" && (board[i][j] != "a" || board[i][j] != "b" || board[i][j] != "c" || board[i][j] != "d")){
+            if(board[i][j] != "" && (board[i][j] != "a" || board[i][j] != "b" || board[i][j] != "c" || board[i][j] != "d")){ // change to doesnt contain a,b,c,d
                 board[i][j] == " ";
             }
         }
