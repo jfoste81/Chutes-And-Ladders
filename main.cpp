@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <ostream>
 #include <string>
+#include <ios> 
+#include <limits>
 
 using namespace std;
 
@@ -27,6 +29,7 @@ int main(){
     vector<int> coords;
     int userVal;
     int userWinner; 
+    string input = "";
     bool run = true;
     int x;
     int y; 
@@ -40,11 +43,13 @@ int main(){
     //Introduction statements
     cout << "Welcome to Chutes and Ladders!" << endl;
     cout << "How many users will be playing the game?" << endl;
-    cin >> userVal;
-    while(userVal < 2 || userVal > 4){ // Ask user for an amount of players and check that its valid
+    cin >> input;
+    userVal = atoi(input.c_str());
+    do { // Ask user for an amount of players and check that its valid
         cout << "The game can only support 2-4 players. Please enter another value:" << endl;
-        cin >> userVal;
-    }
+        cin >> input;
+        userVal = atoi(input.c_str());
+    }while(userVal < 2 || userVal > 4);
     
     // For loop that adds in the amount of pieces based on the amount of players and initializing coordinates for each user to [4][0]
     for(int i = 0; i < userVal; i++){
