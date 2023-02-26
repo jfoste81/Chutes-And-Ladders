@@ -60,7 +60,11 @@ int main(){
     
     // For loop that initializes each user's piece to [4][0] on the board
     for(int i = 0; i < users.size(); i++){
-        board[coords.at(i * 2)][coords.at(i * 2 + 1)] += users.at(i);
+        if(i == 0){
+            board[coords.at(i * 2)][coords.at(i * 2 + 1)] = users.at(i);
+        } else{
+            board[coords.at(i * 2)][coords.at(i * 2 + 1)] += users.at(i);
+        }
     }
     displayBoard(board);
     //Start of the actual game
@@ -69,28 +73,25 @@ int main(){
             string choice = "";
             cout << "\nPlayer " << i+1 << " are you ready? Press any button to continue:" << endl; //User input
             cin >> choice; 
-            cout << "spin()" << endl;
             spinAmount = spin(); 
             cout << "\nPlayer " << i+1 << " spun a " << endl;
             //for loop that simulates dice rolling
-            for(int j = 0; j < (rand() % 200000) + 100000; j++){ 
+            for(int j = 0; j < (rand() % 20000) + 15000; j++){ 
                 cout << "\r" << (rand() % 6) + 1 << flush;
             }
             cout << "\r" << spinAmount << "!" << endl;
             sleep(2);
-            cout << "move()" << endl;
-            move(board, spinAmount, coords, users, i);
-            cout << "displayboard()" << endl;
+            move(board, spinAmount, coords, users, i); 
             displayBoard(board);
-            sleep(3);
+            sleep(2);
             if(checkForLadders(board, coords, i)){
                 cout << "\nPlayer " << i+1 << " climbed up a ladder!" << endl;
-                sleep(2);
+                sleep(1);
                 displayBoard(board);
                 sleep(2);
             } else if(checkForChutes(board, coords, i)){
                 cout << "\nPlayer " << i+1 << " fell down a chute!" << endl;
-                sleep(2);
+                sleep(1);
                 displayBoard(board);
                 sleep(2);
             }
@@ -118,12 +119,17 @@ int spin(){
 void move(string board[5][8], int spinAmount, vector<int>& coords, vector<string> users, int count){ 
     int y = coords.at(count * 2);
     int x = coords.at(count * 2 + 1);
+    bool onlySpaces = false;
+
+    //if-else chain that forces user to roll exactly to the last space
     if(y == 0 && x + spinAmount > 7 && x > 0){
-        board[y][x-1] = users.at(count);
-        board[y][x] = board[y][x].erase(board[y][x].find(users.at(count)),1);
-        return;
-    } else if(y == 0 && x + spinAmount > 7 && x == 0){
-        board[y-1][x] = users.at(count);
+        cout << "You rolled past the end! Back up a space!" << endl;
+        sleep(2);
+        if(isspace(board[y][x-1].at(0))){
+            board[y][x-1] = users.at(count);
+        } else{
+            board[y][x-1] += users.at(count);
+        }
         board[y][x] = board[y][x].erase(board[y][x].find(users.at(count)),1);
         return;
     } else if(y == 0 && x + spinAmount == 7){
@@ -142,20 +148,44 @@ void move(string board[5][8], int spinAmount, vector<int>& coords, vector<string
             }
         }
     }
-    board[coords.at(count * 2)][coords.at(count * 2 + 1)] += users.at(count); //if-else chain to check see if space is empty (for spaces)
-    board[y][x] = board[y][x].erase(board[y][x].find(users.at(count)),1);
+    
+    onlySpaces = false;
+    for(int i = 0; i < board[coords.at(count * 2)][coords.at(count * 2 + 1)].length(); i++){ //checks to see if new spot has any other players in it
+        if(isspace(board[coords.at(count * 2)][coords.at(count * 2 + 1)].at(i))){
+            onlySpaces = true;
+        } else{
+            onlySpaces = false;
+            break;
+        }
+    }
+    //if-else chain to check see if space is empty (for spaces)
+    if(onlySpaces){
+        board[coords.at(count * 2)][coords.at(count * 2 + 1)] = users.at(count); 
+    } else if(!onlySpaces){
+        board[coords.at(count * 2)][coords.at(count * 2 + 1)] += users.at(count); 
+    }
+    board[y][x] = board[y][x].erase(board[y][x].find(users.at(count)),1); 
 }
 
 //Function that prints out the board, with all of the chutes and ladders included!
 void displayBoard(string board[5][8]){
     //puts a space inside of empty indices
-    for(int i = 0; i < 5; i++){
+
+    for(int i = 0; i < 5; i++){ 
+        bool onlySpaces = true;
         for(int j = 0; j < 8; j++){
-            if(board[i][j] != " " && (board[i][j].find("a") != string::npos || board[i][j].find("b") != string::npos || board[i][j].find("c") != string::npos || board[i][j].find("d") != string::npos)){ // change to doesnt contain a,b,c,d
+            for(int n = 0; n < board[i][j].length(); n++){
+                if(!isspace(board[i][j].at(n))){
+                    onlySpaces = false;
+                    break;
+                }
+            }
+            if(onlySpaces){ 
                 board[i][j] = " ";
             }
         }
     }
+
     // double for loop 
     // inside nested for loop have two if statements (check for first and last) to draw walls '|''
     for(int i = 0; i < 5; i++){
@@ -327,7 +357,7 @@ bool checkForLadders(string board[5][8], vector<int>& coords, int count){
         return true;
     }
     return false;
-}
+} 
 
 // Function that checks the winners square to see if anyone has won yet
 bool checkForWinner(string board[5][8]){
